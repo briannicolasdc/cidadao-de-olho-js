@@ -1,4 +1,7 @@
 import _ from 'lodash'
+import express from 'express';
+const app = express();
+const port = 5000;
 
 function getDeputadosList() {
     return fetch('http://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json')
@@ -8,7 +11,7 @@ function getDeputadosList() {
 
 function getGastoMesDeputado(id, mes) {
     return fetch('http://dadosabertos.almg.gov.br/ws/prestacao_contas/verbas_indenizatorias/deputados/' + id + '/2019/' + mes + '?formato=json')
-        .then(response => response.text())
+        .then(response => response.json())
         .catch(err => console.error(err));
 }
 
@@ -17,9 +20,9 @@ async function getGastoTotalDeputado(id) {
     for (let mes = 1; mes <= 12; mes++) {
         const gastoDeputado = await getGastoMesDeputado(id, mes);
         if (gastoDeputado && gastoDeputado.list && gastoDeputado.list.length > 0) {
-            gastoDeputado.list.map(gasto => {
+            for (const gasto of gastoDeputado.list) {
                 somaGastoTotal += gasto.valor;
-            });
+            }
         }
     }
     return somaGastoTotal;
@@ -50,7 +53,9 @@ async function getRedes() {
                 }
             }
         }
-    return countRedes.sort();
+        let entries = Object.entries(countRedes);
+        let sort = entries.sort((a, b) => b[1] - a[1]);
+    return sort;
 }
 
 function main() {
