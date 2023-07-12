@@ -1,4 +1,5 @@
-import { DataTypes, Sequelize, json } from "sequelize";
+import { DataTypes, Sequelize } from "sequelize";
+import { getDeputadosList } from "./index.js";
 
 const sequelize = new Sequelize('deputadosDB', 'root', 'password', {
     host: '127.0.0.1',
@@ -53,4 +54,38 @@ const sequelize = new Sequelize('deputadosDB', 'root', 'password', {
         },
   })
 
-  
+  async function storeInDB(){
+    await Deputado.sync({ force: true });
+
+    const deputadosList = await getDeputadosList();
+    for(let dep of deputadosList.list){
+        const arrayRedes = [];
+        for(let rede of dep.redesSociais){
+            let tmp = {'nome': rede.redeSocial.nome, 'url': rede.url};
+            arrayRedes.push(tmp);
+        }
+        
+        
+
+        const deputados = await Deputado.bulkCreate([
+            {
+                id: dep.id,
+                nome: dep.nome,
+                partido: dep.partido,
+                endereco: dep.endereco,
+                telefone: dep.telefone,
+                fax: dep.fax,
+                email: dep.email,
+                sitePessoal: dep.sitePessoal,
+                naturalidade: dep.naturalidadeMunicipio,
+                uf: dep.naturalidadeUf,
+                nascimento: dep.dataNascimento,
+                redesSociais: arrayRedes
+            },
+        ])
+    }
+    
+  }
+
+  storeInDB()
+

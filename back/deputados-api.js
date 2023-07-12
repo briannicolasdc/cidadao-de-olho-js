@@ -1,9 +1,7 @@
 import _ from 'lodash'
-import express from 'express';
-const app = express();
-const port = 5000;
 
-function getDeputadosList() {
+
+export function getDeputadosList() {
     return fetch('http://dadosabertos.almg.gov.br/ws/deputados/lista_telefonica?formato=json')
         .then(response => response.json())
         .catch(error => console.error(error));
@@ -11,24 +9,29 @@ function getDeputadosList() {
 
 function getGastoMesDeputado(id, mes) {
     return fetch('http://dadosabertos.almg.gov.br/ws/prestacao_contas/verbas_indenizatorias/deputados/' + id + '/2019/' + mes + '?formato=json')
-        .then(response => response.json())
+        .then(response => { 
+            return response.json();
+        })
         .catch(err => console.error(err));
 }
 
-async function getGastoTotalDeputado(id) {
+export async function getGastoTotalDeputado(id) {
     let somaGastoTotal = 0;
     for (let mes = 1; mes <= 12; mes++) {
+        await new Promise(resolve => setTimeout(resolve, 800));
         const gastoDeputado = await getGastoMesDeputado(id, mes);
         if (gastoDeputado && gastoDeputado.list && gastoDeputado.list.length > 0) {
-            for (const gasto of gastoDeputado.list) {
-                somaGastoTotal += gasto.valor;
-            }
+            gastoDeputado.list.map(gasto => {
+                if(gasto.valor){
+                    somaGastoTotal += gasto.valor;
+                }
+            })
         }
     }
     return somaGastoTotal;
 }
 
-async function getGastosTotais(){
+export async function getGastosTotais(){
     const countGastosTotais = [];
     const deputadosList = await getDeputadosList();
     for(const deputado of deputadosList.list){
@@ -40,7 +43,7 @@ async function getGastosTotais(){
     return countGastosTotais;
 }
 
-async function getRedes() {
+export async function getRedes() {
     const countRedes = {};
     const deputadosList = await getDeputadosList();
         for(const deputado of deputadosList.list){
@@ -58,23 +61,3 @@ async function getRedes() {
     return sort;
 }
 
-function main() {
-    // getDeputadosList()
-    //     .then(deputadosList => {
-    //         console.log(deputadosList);
-    //     });
-    // getGastoTotalDeputado('7752')
-    //     .then(gasto =>{
-    //         console.log(gasto);
-    //  })
-    // getRedes()
-    //     .then(countRedes => {
-    //         console.log(countRedes);
-    //     })
-    getGastosTotais()
-        .then(list => 
-            console.log(list));
-
-}
-
-main();
