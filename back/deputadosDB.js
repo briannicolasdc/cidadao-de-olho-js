@@ -1,5 +1,5 @@
 import { DataTypes, Sequelize } from "sequelize";
-import { getDeputadosList } from "./index.js";
+import { getDeputadosList, getGastoTotalDeputado } from "./deputados-api.js";
 
 const sequelize = new Sequelize('deputadosDB', 'root', 'password', {
     host: '127.0.0.1',
@@ -52,40 +52,49 @@ const sequelize = new Sequelize('deputadosDB', 'root', 'password', {
         redesSociais: {
             type: DataTypes.JSON 
         },
+        gastoTotal: {
+            type: DataTypes.BIGINT
+        }
   })
 
   async function storeInDB(){
-    await Deputado.sync({ force: true });
+    await Deputado.sync();
 
-    const deputadosList = await getDeputadosList();
-    for(let dep of deputadosList.list){
-        const arrayRedes = [];
-        for(let rede of dep.redesSociais){
-            let tmp = {'nome': rede.redeSocial.nome, 'url': rede.url};
-            arrayRedes.push(tmp);
+    const { count, rows } = await Deputado.findAndCountAll();
+    if (count === 0 && rows === 0) {
+        console.log('runnin if')
+        const deputadosList = await getDeputadosList();
+        for(let dep of deputadosList.list){
+            const arrayRedes = [];
+            let valor = await getGastoTotalDeputado(dep.id);
+            for(let rede of dep.redesSociais){
+                let tmp = {'nome': rede.redeSocial.nome, 'url': rede.url};
+                arrayRedes.push(tmp);
+            }
+    
+            const deputados = await Deputado.bulkCreate([
+                {
+                    id: dep.id,
+                    nome: dep.nome,
+                    partido: dep.partido,
+                    endereco: dep.endereco,
+                    telefone: dep.telefone,
+                    fax: dep.fax,
+                    email: dep.email,
+                    sitePessoal: dep.sitePessoal,
+                    naturalidade: dep.naturalidadeMunicipio,
+                    uf: dep.naturalidadeUf,
+                    nascimento: dep.dataNascimento,
+                    redesSociais: arrayRedes,
+                    gastoTotal: valor
+                },
+            ])
         }
         
-        
-
-        const deputados = await Deputado.bulkCreate([
-            {
-                id: dep.id,
-                nome: dep.nome,
-                partido: dep.partido,
-                endereco: dep.endereco,
-                telefone: dep.telefone,
-                fax: dep.fax,
-                email: dep.email,
-                sitePessoal: dep.sitePessoal,
-                naturalidade: dep.naturalidadeMunicipio,
-                uf: dep.naturalidadeUf,
-                nascimento: dep.dataNascimento,
-                redesSociais: arrayRedes
-            },
-        ])
-    }
+      }
     
-  }
-
+      
+    }
+    export default Deputado;
   storeInDB()
 

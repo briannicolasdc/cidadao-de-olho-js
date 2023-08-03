@@ -1,24 +1,30 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { getDeputados } from './api'
+import { getDeputados, getRedes } from './api'
 
 const testGetDeputados = async () => {
-  const message = await getDeputados()
-  return console.log(message)
+  const message = await getDeputados();
+  return console.log(message);
+}
+
+
+const testGetRedes = async () => {
+  const redes = await getRedes();
+  return console.log(redes);
 }
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);  
 
   return (
     <>
       <div>
-        <button onClick={testGetDeputados}>get deputados</button>
-        
+        <button onClick={() => testGetDeputados()}>get deputados</button>
+        <button onClick={() => testGetRedes()}>get redes</button>
+        <>
+          {/* {listaDeputados()} */}
+        </>
       </div>
-      <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

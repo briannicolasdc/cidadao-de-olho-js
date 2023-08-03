@@ -39,8 +39,10 @@ export async function getGastosTotais(){
         let tmp = {'valor': valor, 'nome': deputado.nome};
         countGastosTotais.push(tmp);
     }
-    //countGastosTotais.sort((a, b) => {b.valor - a.valor});
-    return countGastosTotais;
+
+    let sortedGastos = countGastosTotais.sort((a, b) => {b.valor - a.valor});
+    
+    return sortedGastos;
 }
 
 export async function getRedes() {
@@ -60,4 +62,12 @@ export async function getRedes() {
         let sort = entries.sort((a, b) => b[1] - a[1]);
     return sort;
 }
+
+async function main(){
+    
+    const gastos = await getRedes();
+    console.log(gastos);
+}
+
+main()
 
