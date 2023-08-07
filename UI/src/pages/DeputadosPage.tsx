@@ -42,12 +42,15 @@ export default function DeputadosPage(): JSX.Element {
 
     return (
         <div>
-            {JSON.stringify(deputados)}
             <table>
                 <thead>
-                    {keys.map(objkey => (
-                        <th>{objkey}</th>
-                    ))}
+                    <tr>
+                        {keys.map(objkey => {
+                            if (objkey !== "createdAt" && objkey !== "updatedAt") {
+                                return <th>{objkey}</th>;
+                            }
+                        })}
+                    </tr>
                 </thead>
                 <tbody>
 
@@ -55,7 +58,21 @@ export default function DeputadosPage(): JSX.Element {
                         return (
                             <tr key={index}>
                                 {keys.map((key, index) => {
-                                    return <td key={index}>{item[key]}</td>
+                                    if (key !== "createdAt" && key !== "updatedAt") {
+                                        if (key === "redesSociais") {
+                                            return (
+                                                <td key={index}>
+                                                    {item.redesSociais.map((rede, redeIndex) => (
+                                                        <div key={redeIndex}>
+                                                            {rede.nome}: {rede.url}
+                                                        </div>
+                                                    ))}
+                                                </td>
+                                            );
+                                        } else {
+                                            return <td key={index}>{item[key]}</td>;
+                                        }
+                                    }
                                 })}
                             </tr>
 

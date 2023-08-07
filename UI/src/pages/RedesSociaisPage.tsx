@@ -30,7 +30,7 @@ export default function RedesComponent (): JSX.Element {
     {redes.map(rede => {
       const nome = rede[0] as string;
       const count = rede[1] as number;
-        return (<h5>{nome + ': ' + count}</h5>)
+        return (<h5>{nome} : {count}</h5>)
       })} 
     </div>
       
