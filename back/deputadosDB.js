@@ -62,7 +62,6 @@ const sequelize = new Sequelize('deputadosDB', 'root', 'password', {
 
     const { count, rows } = await Deputado.findAndCountAll();
     if (count === 0 && rows === 0) {
-        console.log('runnin if')
         const deputadosList = await getDeputadosList();
         for(let dep of deputadosList.list){
             const arrayRedes = [];

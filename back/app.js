@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import {getRedes, getGastosTotais, getDeputadosList, getGastoTotalDeputado} from './deputados-api.js'
+import {getRedes} from './deputados-api.js'
 import Deputado from './deputadosDB.js'
 
 const app = express();
@@ -21,7 +21,7 @@ router.get('/deputados', async (req, res) => {
 })
 
 router.get('/deputados/:deputadoId/gastos', async (req, res) => { 
-    const gastoTotalDeputado = await getGastoTotalDeputado(req.params.deputadoId)
+    const gastoTotalDeputado = await Deputado.findByPk(req.params.deputadoId, {attributes: ['id', 'nome', 'gastoTotal']});
 
     res.send({
         gasto: gastoTotalDeputado,
@@ -34,8 +34,12 @@ router.get('/redes-sociais', async (req, res) => {
 });
 
 router.get('/gastos-totais', async (req, res) => {
-    const gastosTotais = await getGastosTotais();
-    res.send(gastosTotais);
+    try {
+        const gastosTotais = await Deputado.findAll({attributes: ['id', 'nome', 'gastoTotal']});
+        res.send(gastosTotais);
+    } catch (error) {
+        console.error(error);
+    }
 })
 
 app.use(router)

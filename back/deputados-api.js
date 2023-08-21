@@ -65,9 +65,8 @@ export async function getRedes() {
 
 async function main(){
     
-    const gastos = await getRedes();
-    console.log(gastos);
+    
 }
 
-main()
+//main()
 

@@ -5,6 +5,8 @@ import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RedesComponent from './pages/RedesSociaisPage.tsx';
 import DeputadosPage from './pages/DeputadosPage.tsx';
+import GastosPage from './pages/GastosPage.tsx';
+import GastoPorID from './pages/GastoPorID.tsx';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +21,14 @@ const router = createBrowserRouter([
     path: '/redes-sociais',
     element: <RedesComponent />
   },
+  {
+    path: '/gastos-totais',
+    element: <GastosPage />
+  },
+  {
+    path: '/deputados/:deputadoId/gastos',
+    element: <GastoPorID />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

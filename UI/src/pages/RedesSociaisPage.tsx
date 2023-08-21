@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import {redesProps} from '../types.tsx'
+import {RedesProps} from '../types.tsx'
 import { getRedes } from "../api";
 
 export default function RedesComponent (): JSX.Element {
 
 
-    const [redes, setRedes] = useState<redesProps[]>([])
+    const [redes, setRedes] = useState<RedesProps[]>([])
 
     useEffect(() => {
       fetchRedes()
@@ -26,11 +26,11 @@ export default function RedesComponent (): JSX.Element {
   return (
     <>
     <div>
-      <h3>Redes sociais e quantidade deputados que usam: </h3>
+      <h1 className="pb-10 text-2xl">Redes sociais e quantidade de deputados que usam: </h1>
     {redes.map(rede => {
       const nome = rede[0] as string;
       const count = rede[1] as number;
-        return (<h5>{nome} : {count}</h5>)
+        return (<h2 className="py-2.5 ">{nome} : {count}</h2>)
       })} 
     </div>
       

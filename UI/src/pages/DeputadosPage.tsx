@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDeputados } from "../api";
-import { Deputado } from "../types";
+import { Deputado, RedeSocial } from "../types";
 
 export default function DeputadosPage(): JSX.Element {
     const [isLoading, setIsLoading] = useState(true);
@@ -42,12 +42,12 @@ export default function DeputadosPage(): JSX.Element {
 
     return (
         <div>
-            <table>
+            <table className="table-fixed">
                 <thead>
                     <tr>
                         {keys.map(objkey => {
                             if (objkey !== "createdAt" && objkey !== "updatedAt") {
-                                return <th>{objkey}</th>;
+                                return <th className="text-sm">{objkey}</th>;
                             }
                         })}
                     </tr>
@@ -56,7 +56,7 @@ export default function DeputadosPage(): JSX.Element {
 
                     {deputados.map((item, index) => {
                         return (
-                            <tr key={index}>
+                            <tr key={index} >
                                 {keys.map((key, index) => {
                                     if (key !== "createdAt" && key !== "updatedAt") {
                                         if (key === "redesSociais") {
@@ -64,13 +64,13 @@ export default function DeputadosPage(): JSX.Element {
                                                 <td key={index}>
                                                     {item.redesSociais.map((rede, redeIndex) => (
                                                         <div key={redeIndex}>
-                                                            {rede.nome}: {rede.url}
+                                                            <RedeSocialComponent nome={rede.nome} url={rede.url} />
                                                         </div>
                                                     ))}
                                                 </td>
                                             );
                                         } else {
-                                            return <td key={index}>{item[key]}</td>;
+                                            return <td key={index} className="text-xs py-5 px-1">{item[key]}</td>;
                                         }
                                     }
                                 })}
@@ -84,3 +84,16 @@ export default function DeputadosPage(): JSX.Element {
         </div>
     )
 }
+
+function RedeSocialComponent (props: RedeSocial) : JSX.Element {
+    
+        return (
+            <div className="px-10">
+                <a href={props.url}><i className={"fa-brands fa-"+ props.nome.toLowerCase()}></i></a>
+            </div>
+        )
+    
+
+    
+}
+

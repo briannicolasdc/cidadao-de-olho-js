@@ -21,12 +21,16 @@ export interface RedeSocial {
 }
 
 
-export interface redesProps {
+export interface RedesProps {
   nome: string, 
   count: number
 }
 
-
+export interface GastosTotais{
+  id: number,
+  nome: string, 
+  gasto: number
+}
 
 
 
