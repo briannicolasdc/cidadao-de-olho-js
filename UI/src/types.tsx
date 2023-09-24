@@ -1,4 +1,3 @@
-
 export interface Deputado {
   id: number;
   nome: string;
@@ -20,22 +19,13 @@ export interface RedeSocial {
   url: string;
 }
 
-
 export interface RedesProps {
-  nome: string, 
-  count: number
+  nome: string;
+  count: number;
 }
 
-export interface GastosTotais{
-  id: number,
-  nome: string, 
-  gasto: number
+export interface GastosTotais {
+  id: number;
+  nome: string;
+  gasto: number;
 }
-
-
-
-
-
-
-
-
